@@ -9,6 +9,15 @@ exports.getUsers = (req, res, next) => {
     }
     ).catch(next)
 }
+// exports.getUser = (req, res, next) => {
+//     const { username } = req.params;
+//     selectUser(username).then(([user]) => {
+//         // console.log(username, 'hello 456')
+//         res.status(200)
+//             .send({ user })
+//     }
+//     ).catch(next)
+// }
 
 // const arr = [{username:''}]
 

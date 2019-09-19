@@ -162,7 +162,7 @@ describe('makeRefObj', () => {
 })
 
 
-describe.only('formatComments', () => {
+describe('formatComments', () => {
   it('returns an empty array, when given an empty array', () => {
     const inputArr = [];
     const actual = formatComments(inputArr);

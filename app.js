@@ -8,9 +8,18 @@ app.use('/api', apiRouter)
 
 
 app.use((err, req, res, next) => {
-    console.log(err)
+    // console.log(err, 'hello app')
+    const errCodes = ['23502', '22P02', '23503']
 
-    const errCodes = ['23502', '22P02']
+    if (err.status) {
+        res.status(err.status).send({ msg: err.msg })
+        console.log(err.msg, 'hello')
+    }
+    else if (err.code) {
+        res.status(err.status).send({ msg: 'yolo' })
+    }
+
+
 
     if (errCodes.includes(err.code)) {
         if (err.code === '23502')
@@ -19,10 +28,16 @@ app.use((err, req, res, next) => {
         else if (err.code === '22P02') {
             res.status(400).send({ msg: 'Incorrect data type ding ding curry curry 2.99' })
         }
+        else if (err.code === '23503') {
+            res.status(404).send({ msg: err.msg })
+        }
 
 
     }
-    else { next(err) }
+
+    else { console.log(err, 'selectCommss') }
+
+
 
 })
 
