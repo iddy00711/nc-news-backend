@@ -22,6 +22,7 @@ exports.insertArticle = (newVote, id) => {
         .increment({ "votes": newVote })
         .returning('*')
         .then(response => {
+            console.log(response)
 
             if (response.length === 0) {
                 return Promise.reject({ status: 404, msg: "user not found" });
@@ -46,12 +47,12 @@ exports.insertComment = (comment, article_id) => {
         })
 };
 
-exports.selectComments = (article_id, sort_by, order_by) => {
-    console.log('models 123')
+exports.selectComments = (article_id, sort_by = 'created_at', order_by = 'desc') => {
 
 
-    return connection.select('*').from('comments').where({ 'article_id': article_id }).sortBy(sort_by, order_by).then(response => {
-        console.log('models 456')
+
+    return connection.select('*').from('comments').where({ 'article_id': article_id }).orderBy(sort_by, order_by).then(response => {
+
 
         if (response.length === 0) {
             return Promise.reject({ status: 404, msg: "user not found" });
@@ -59,3 +60,24 @@ exports.selectComments = (article_id, sort_by, order_by) => {
         else { return response }
     })
 }
+
+exports.selectArtciles_2 = (sortBy = 'created_at', orderBy = 'desc') => {
+    console.log(orderBy, sortBy)
+    return connection
+        .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
+        .from('articles')
+        .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+        .groupBy('articles.article_id')
+        .count('comment_id AS comment_count')
+        .orderBy(sortBy, orderBy).then(response => {
+            console.log('models 456')
+
+            if (response.length === 0) {
+                return Promise.reject({ status: 404, msg: "user not found" });
+            }
+            else { return response }
+        })
+}
+
+
+//exports.updateComment = (commentId, newVote) => {return connection('comments').where({'comment_id': comment_id}).increment('votes':newVotes).returning('*')}

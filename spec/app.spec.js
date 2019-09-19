@@ -1,12 +1,11 @@
 process.env.NODE_ENV = 'test';
 const request = require('supertest');
 const chai = require('chai');
-// const chaiSorted = require('chai-sorted');
+const chaiSorted = require('sams-chai-sorted');
 const { expect } = chai;
 const app = require('../app');
 const connection = require('../db/connection');
-
-// chai.use(chaiSorted);
+chai.use(chaiSorted);
 
 describe('/api', () => {
     after(() => {
@@ -69,8 +68,6 @@ describe('/api', () => {
                 .get('/api/articles/1')
                 .expect(200)
                 .then(({ body }) => {
-                    // console.log(body, 'hello 123')
-                    // {user: {username: '',...}}
                     expect(body.article).to.be.an('object');
                     expect(body.article).to.contain.keys(
                         'author', 'title', 'article_id', 'body', 'topic', 'created_at', 'votes', 'comment_count'
@@ -174,18 +171,130 @@ describe('/api', () => {
                 });
         });
     });
-    describe.only('/articles/:article_id/comments', () => {
+    describe('/articles/:article_id/comments', () => {
         it('GET 200: return an array of comments of a given article', () => {
             return request(app)
                 .get('/api/articles/1/comments')
                 .expect(200)
                 .then(({ body }) => {
-                    console.log(body.comments, 'app.sec')
+                    console.log(body.comments[0])
                     expect(body.comments).to.be.an('array');
+                    expect(body.comments.length).to.equal(13)
+
+                    expect(body.comments.every((comment) => { return comment.article_id === 1 })).to.be.true
                 });
         });
     });
-});
+
+    describe('/articles', () => {
+        it('GET 200: an `articles` array of article objects', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+
+                    expect(body.articles).to.be.an('object');
+
+                    expect(body.articles).to.contain.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+
+
+
+                });
+        });
+        it('GET 200: an `articles` array of article', () => {
+            return request(app)
+                .get('/api/articles?sortBy=votes')
+                .expect(200)
+                .then(({ body }) => {
+                    console.log(body.articles)
+
+                    expect(body.articles).to.be.an('array');
+                    expect(body.articles).to.be.descendingBy('votes')
+                    // expect(body.articles[])
+
+                    expect(body.articles[0]).to.contain.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+
+
+
+                });
+        });
+        it('GET 200: an `articles` array of article', () => {
+            return request(app)
+                .get('/api/articles?orderBy=asc')
+                .expect(200)
+                .then(({ body }) => {
+                    console.log(body.articles)
+
+
+                    expect(body.articles).to.be.sortedBy('created_at')
+
+                    expect(body.articles[0]).to.contain.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+
+
+
+                });
+        });
+    });
+    describe('/api/comments/:comment_id', () => {
+        it('PATCH 200: return an array of comments of a given article', () => {
+            return request(app)
+                .patch('/api/comments/2')
+                .send({ inc_votes: 1 })
+                .expect(200)
+                .then(({ body }) => {
+
+                    expect(body.comment.votes).to.equal(15)
+                });
+        });
+
+    });
+    describe.only('/api/comments/:comment_id', () => {
+        it('PATCH 404: returns an error when given an non-present comment_id', () => {
+            return request(app)
+                .patch('/api/comments/1000')
+                .send({ inc_votes: 1 })
+                .expect(404)
+                .then(({ body }) => {
+                    console.log(body, 'shaqqlqlqlq')
+
+                    expect(body.msg).to.equal('comment not found')
+                });
+        });
+
+    });
+    describe('/api/comments/:comment_id', () => {
+        it('DELETE 204 : deletes comment ', () => {
+            return request(app)
+                .delete('/api/comments/1')
+                .expect(204)
+
+        });
+
+    });
+    describe('/api/comments/:comment_id', () => {
+        it('DELETE 404 : returns an err message when the comment_id is not present ', () => {
+
+            return request(app)
+                .delete('/api/comments/10000')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).to.equal('comment not found')
+                })
+
+        });
+        it('DELETE 400 : returns an err message when the comment_id is not in correct type-format ', () => {
+
+            return request(app)
+                .delete('/api/comments/qwertyuiop')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).to.equal('bad request')
+                })
+
+        });
+
+    });
+})
 
 
 

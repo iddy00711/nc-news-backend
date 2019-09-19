@@ -1,4 +1,4 @@
-const { selectArticle, insertArticle, insertComment, selectComments } = require('../models/articles-models')
+const { selectArticle, insertArticle, insertComment, selectComments, selectArtciles_2 } = require('../models/articles-models')
 
 exports.getArticles = (req, res, next) => {
     const { article_id } = req.params
@@ -45,8 +45,17 @@ exports.getComments = (req, res, next) => {
     selectComments(article_id, sort_by, order_by).then((comments) => {
         console.log('con 456')
         res.status(200).send({ comments })
-    }).catch(console.log)
+    }).catch(next)
 
+}
+
+exports.getArticles_2 = (req, res, next) => {
+    const { sortBy, orderBy, author, topic } = req.query
+    // const { article_id } = req.params
+
+    selectArtciles_2(sortBy, orderBy, author, topic).then((articles) => {
+        res.status(200).send({ articles })
+    })
 }
 
 
