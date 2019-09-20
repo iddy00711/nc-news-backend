@@ -38,11 +38,11 @@ exports.postComment = (req, res, next) => {
 exports.getComments = (req, res, next) => {
     const { article_id } = req.params
     const { sort_by, order_by } = req.query
-        ('cintroller 123')
+
 
 
     selectComments(article_id, sort_by, order_by).then((comments) => {
-        ('con 456')
+
         res.status(200).send({ comments })
     }).catch(next)
 
@@ -50,7 +50,7 @@ exports.getComments = (req, res, next) => {
 
 exports.getArticles_2 = (req, res, next) => {
     const { sortBy, orderBy, author, topic } = req.query
-        (orderBy, 'controller _2')
+
 
     selectArtciles_2(sortBy, orderBy, author, topic).then((articles) => {
         res.status(200).send({ articles })

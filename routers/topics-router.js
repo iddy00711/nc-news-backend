@@ -4,9 +4,16 @@ const {
 
 } = require('../controllers/topics-controller');
 
+
+const send405Error = (req, res, next) => {
+    res.status(405).send({ msg: 'method not found' })
+}
 topicsRouter
     .route('/')
-    .get(getTopics);
+    .get(getTopics)
+    .all(send405Error)
+
+
 
 
 

@@ -406,6 +406,104 @@ describe('/api', () => {
         });
 
     });
+    describe('INVALID METHODS TOPICS', () => {
+        it('status 405', () => {
+
+            const invalidMethods = ['patch', 'put', 'delete', 'post'];
+            const methodPromises = invalidMethods.map((method) => {
+                return request(app)
+                [method]('/api/topics')
+                    .expect(405)
+                    .then(({ body }) => {
+                        expect(body.msg).to.equal('method not found')
+                    })
+            })
+            return Promise.all(methodPromises)
+
+        })
+    });
+    describe('INVALID METHODS USERS', () => {
+        it('status 405', () => {
+
+            const invalidMethods = ['patch', 'put', 'delete', 'post'];
+            const methodPromises = invalidMethods.map((method) => {
+                return request(app)
+                [method]('/api/users/1')
+                    .expect(405)
+                    .then(({ body }) => {
+                        expect(body.msg).to.equal('method not found')
+                    })
+            })
+            return Promise.all(methodPromises)
+
+        })
+    });
+    describe('INVALID METHODS COMMENTS', () => {
+        it('status 405', () => {
+
+            const invalidMethods = ['put', 'post'];
+            const methodPromises = invalidMethods.map((method) => {
+                return request(app)
+                [method]('/api/comments/1')
+                    .expect(405)
+                    .then(({ body }) => {
+                        expect(body.msg).to.equal('method not found')
+                    })
+            })
+            return Promise.all(methodPromises)
+
+        })
+    });
+    describe('INVALID METHODS ARTICLES', () => {
+        it('status 405', () => {
+
+            const invalidMethods = ['put', 'delete', 'post', 'patch'];
+            const methodPromises = invalidMethods.map((method) => {
+                return request(app)
+                [method]('/api/articles')
+                    .expect(405)
+                    .then(({ body }) => {
+                        expect(body.msg).to.equal('method not found')
+                    })
+            })
+            return Promise.all(methodPromises)
+
+        })
+    });
+
+    describe('INVALID METHODS ARTICLES', () => {
+        it('status 405', () => {
+
+            const invalidMethods = ['put', 'delete', 'post'];
+            const methodPromises = invalidMethods.map((method) => {
+                return request(app)
+                [method]('/api/articles/3')
+                    .expect(405)
+                    .then(({ body }) => {
+                        expect(body.msg).to.equal('method not found')
+                    })
+            })
+            return Promise.all(methodPromises)
+
+        })
+    });
+    describe('INVALID METHODS ARTICLES', () => {
+        it('status 405', () => {
+
+            const invalidMethods = ['put', 'delete', 'patch'];
+            const methodPromises = invalidMethods.map((method) => {
+                return request(app)
+                [method]('/api/articles/3/comments')
+                    .expect(405)
+                    .then(({ body }) => {
+                        console.log(body)
+                        expect(body.msg).to.equal('method not found')
+                    })
+            })
+            return Promise.all(methodPromises)
+
+        })
+    });
 })
 
 

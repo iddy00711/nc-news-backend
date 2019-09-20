@@ -12,9 +12,6 @@ exports.selectUsers = (username) => {
             }
             else { return response }
         })
-
-
-
 }
 
 

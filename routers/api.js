@@ -16,4 +16,6 @@ apiRouter.use('/users', usersRouter)
 //invalidRequestsPromises.map(method => {return request(app) [method]('/api/houses').expect(405)}) return Promise.all(invalidResponsePromiss)
 
 
-module.exports = apiRouter;
+
+
+module.exports = apiRouter
