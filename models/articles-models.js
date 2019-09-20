@@ -1,20 +1,26 @@
 const connection = require('../db/connection')
 
 exports.selectArticle = (article_id) => {
-    {
-        return connection
-            .select('articles.*')
-            .from('articles')
-            .leftJoin('comments', 'articles.article_id', 'comments.article_id')
-            .groupBy('articles.article_id')
-            .count('comment_id AS comment_count')
 
-    }
+    return connection
+        .select('articles.*')
+        .from('articles')
+        .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+        .groupBy('articles.article_id')
+        .count('comment_id AS comment_count')
+        .where({ 'articles.article_id': article_id })
+        .then(response => {
+            if (response.length === 0) {
+                return Promise.reject({ status: 404, msg: "path not found" });
+            }
+            else { return response }
+        })
+
 }
 
 exports.insertArticle = (newVote, id) => {
 
-    console.log(newVote, id, 'hello 123')
+    (newVote, id, 'hello 123')
 
     return connection
         .from('articles')
@@ -22,10 +28,8 @@ exports.insertArticle = (newVote, id) => {
         .increment({ "votes": newVote })
         .returning('*')
         .then(response => {
-            console.log(response)
-
             if (response.length === 0) {
-                return Promise.reject({ status: 404, msg: "user not found" });
+                return Promise.reject({ status: 404, msg: "path not found" });
             }
             else { return response }
         })
@@ -51,18 +55,23 @@ exports.selectComments = (article_id, sort_by = 'created_at', order_by = 'desc')
 
 
 
-    return connection.select('*').from('comments').where({ 'article_id': article_id }).orderBy(sort_by, order_by).then(response => {
-
-
-        if (response.length === 0) {
-            return Promise.reject({ status: 404, msg: "user not found" });
-        }
-        else { return response }
-    })
+    return connection
+        .select('*')
+        .from('comments')
+        .where({ 'article_id': article_id })
+        .orderBy(sort_by, order_by)
+        .then(response => {
+            if (response.length === 0) {
+                return Promise.reject({ status: 404, msg: "path not found" });
+            }
+            else { return response }
+        })
 }
 
 exports.selectArtciles_2 = (sortBy = 'created_at', orderBy = 'desc') => {
-    console.log(orderBy, sortBy)
+    if (!['asc', 'desc'].includes(orderBy)) { return Promise.reject({ status: 400, msg: "bad request" }) }
+
+
     return connection
         .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
         .from('articles')
@@ -70,10 +79,9 @@ exports.selectArtciles_2 = (sortBy = 'created_at', orderBy = 'desc') => {
         .groupBy('articles.article_id')
         .count('comment_id AS comment_count')
         .orderBy(sortBy, orderBy).then(response => {
-            console.log('models 456')
 
             if (response.length === 0) {
-                return Promise.reject({ status: 404, msg: "user not found" });
+                return Promise.reject({ status: 404, msg: "path not found" });
             }
             else { return response }
         })

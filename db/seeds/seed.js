@@ -22,7 +22,7 @@ exports.seed = function (knex) {
     })
     .then(() => {
       const formattedArts = formatDates(articleData)
-      // console.log(formattedArts)
+      // (formattedArts)
       return knex.insert(formattedArts)
         .into('articles')
         .returning('*')
@@ -40,10 +40,10 @@ exports.seed = function (knex) {
 
     })
     .then(articleRows => {
-      // console.log('here2')
+      // ('here2')
       const articleRef = makeRefObj(articleRows, 'title', 'article_id');
       const formattedComments = formatComments(commentData, articleRef);
-      // console.log(formattedComments)
+      // (formattedComments)
       /* 
 
       Your comment data is currently in the incorrect format and will violate your SQL schema. 

@@ -8,4 +8,6 @@ topicsRouter
     .route('/')
     .get(getTopics);
 
+
+
 module.exports = topicsRouter;

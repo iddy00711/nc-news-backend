@@ -6,7 +6,7 @@ exports.getArticles = (req, res, next) => {
     selectArticle(article_id)
         .then(([article]) => {
 
-            // console.log(article_id, 'hello 345')
+            (article_id, 'hello 345')
 
             res.status(200)
                 .send({ article })
@@ -17,7 +17,6 @@ exports.getArticles = (req, res, next) => {
 exports.patchArticles = (req, res, next) => {
     const { inc_votes } = req.body
     const { article_id } = req.params
-    // console.log(inc_votes, article_id, 'hello 456')
     insertArticle(inc_votes, article_id)
         .then((article) => {
             res.status(200).send({ article })
@@ -39,11 +38,11 @@ exports.postComment = (req, res, next) => {
 exports.getComments = (req, res, next) => {
     const { article_id } = req.params
     const { sort_by, order_by } = req.query
-    console.log('cintroller 123')
+        ('cintroller 123')
 
 
     selectComments(article_id, sort_by, order_by).then((comments) => {
-        console.log('con 456')
+        ('con 456')
         res.status(200).send({ comments })
     }).catch(next)
 
@@ -51,13 +50,10 @@ exports.getComments = (req, res, next) => {
 
 exports.getArticles_2 = (req, res, next) => {
     const { sortBy, orderBy, author, topic } = req.query
-    // const { article_id } = req.params
+        (orderBy, 'controller _2')
 
     selectArtciles_2(sortBy, orderBy, author, topic).then((articles) => {
         res.status(200).send({ articles })
-    })
+    }).catch(next)
 }
-
-
-// const { sort_by, order_by, author, topic } = req.query
 

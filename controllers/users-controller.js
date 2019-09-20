@@ -3,7 +3,7 @@ const { selectUsers } = require('../models/users-models')
 exports.getUsers = (req, res, next) => {
     const { username } = req.params;
     selectUsers(username).then(([user]) => {
-        // console.log(username, 'hello 456')
+        // (username, 'hello 456')
         res.status(200)
             .send({ user })
     }
@@ -12,7 +12,7 @@ exports.getUsers = (req, res, next) => {
 // exports.getUser = (req, res, next) => {
 //     const { username } = req.params;
 //     selectUser(username).then(([user]) => {
-//         // console.log(username, 'hello 456')
+//         // (username, 'hello 456')
 //         res.status(200)
 //             .send({ user })
 //     }

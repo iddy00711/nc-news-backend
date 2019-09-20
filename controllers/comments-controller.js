@@ -1,7 +1,7 @@
 const { updateComments, destoryComment } = require('../models/comments-models')
 
 exports.patchComments = (req, res, next) => {
-    console.log('hello controller')
+    ('hello controller')
     const { inc_votes } = req.body
     const { comment_id } = req.params
 

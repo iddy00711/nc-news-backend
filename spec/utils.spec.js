@@ -49,15 +49,8 @@ describe('formatDates', () => {
     }];
     const actual = formatDates(inputArr)
 
-    // const dataArr = new Date(inputArr[0].created_at)
-
 
     expect(actual[1].created_at).to.deep.equal(new Date(inputArr[1].created_at))
-
-
-
-
-
   })
   it('does not mutate original array', () => {
     const inputArr = [{
@@ -95,9 +88,6 @@ describe('formatDates', () => {
     expect(actual[0]).to.have.all.keys(['title', 'topic', 'author', 'body', 'created_at'])
   })
 })
-
-
-
 describe('makeRefObj', () => {
   it('returns an empty array, when given an empty array', () => {
     const inputArr = [];
@@ -119,7 +109,6 @@ describe('makeRefObj', () => {
 
 
     expect(actual).to.be.have.all.keys('1')
-    // console.log(actual)
   })
   it('Returns a refObj when given an array of an obj ', () => {
     const inputArr = [{
