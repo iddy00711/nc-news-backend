@@ -68,23 +68,55 @@ exports.selectComments = (article_id, sort_by = 'created_at', order_by = 'desc')
         })
 }
 
-exports.selectArtciles_2 = (sortBy = 'created_at', orderBy = 'desc') => {
+exports.selectArtciles_2 = (sortBy = 'created_at', orderBy = 'desc', author, topic) => {
     if (!['asc', 'desc'].includes(orderBy)) { return Promise.reject({ status: 400, msg: "bad request" }) }
 
 
     return connection
-        .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
+        .select('articles.*')
         .from('articles')
         .leftJoin('comments', 'articles.article_id', 'comments.article_id')
         .groupBy('articles.article_id')
         .count('comment_id AS comment_count')
-        .orderBy(sortBy, orderBy).then(response => {
+        .orderBy(sortBy, orderBy)
+        .modify(currentQuery => {
+            if (author) { currentQuery.where({ 'articles.author': author }) }
+            if (topic) { currentQuery.where({ 'articles.topic': topic }) }
+        })
+        .then(items => {
+
+
+            return Promise.all([items, checkThingExists('articles.author', author), checkThingExists('articles.topic', topic)])
+
+        })
+        .then(([response]) => {
+            console.log('2nd then block')
+            console.log(typeof response)
 
             if (response.length === 0) {
                 return Promise.reject({ status: 404, msg: "path not found" });
             }
             else { return response }
         })
+
+}
+
+const checkThingExists = (column, query) => {
+
+    if (!query) { return false }
+    else {
+
+        return connection
+            .first('*')
+            .from('articles')
+            .where({ [column]: query })
+            .then(arts => {
+                console.log(arts, 'then')
+                if (!arts) { console.log('if'); return Promise.reject({ status: 404, msg: 'path not found' }) }
+
+                else { console.log('else'); return true }
+            })
+    }
 }
 
 

@@ -256,7 +256,6 @@ describe('/api', () => {
                 .then(({ body }) => {
 
                     expect(body.articles).to.be.an('array');
-
                     expect(body.articles[0]).to.contain.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
 
 
@@ -290,8 +289,37 @@ describe('/api', () => {
 
                 });
         });
+        it('GET 200: filters the articles by the username value specified in the query', () => {
+            return request(app)
+                .get('/api/articles?author=icellusedkars')
+                .expect(200)
+                .then(({ body }) => {
+
+                    expect(body.articles.every((article) => { return article.author === 'icellusedkars' })).to.be.true
+
+
+                    expect(body.articles[0]).to.contain.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+
+
+
+                });
+        });
+        it('GET 200: filters the articles by the topic value specified in the query', () => {
+            return request(app)
+                .get('/api/articles?topic=mitch')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles.every((article) => { return article.topic === 'mitch' })).to.be.true
+
+
+                    expect(body.articles[0]).to.contain.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+
+
+
+                });
+        });
     });
-    describe('/articles', () => {
+    describe.only('/articles', () => {
 
 
         it('GET 404: returns an error message when given an incorrect query', () => {
@@ -313,6 +341,26 @@ describe('/api', () => {
 
 
                     expect(body.msg).to.equal('bad request');
+
+                });
+        });
+        it('GET 404: returns an error message when given an incorrect author query', () => {
+            return request(app)
+                .get('/api/articles?author=snoopdogs')
+                .expect(404)
+                .then(({ body }) => {
+
+                    expect(body.msg).to.equal('path not found');
+
+                });
+        });
+        it('GET 404: returns an error message when given an incorrect topic query', () => {
+            return request(app)
+                .get('/api/articles?topic=snoopdogs')
+                .expect(404)
+                .then(({ body }) => {
+
+                    expect(body.msg).to.equal('path not found');
 
                 });
         });

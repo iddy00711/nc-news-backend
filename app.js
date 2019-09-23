@@ -8,6 +8,7 @@ app.use('/api', apiRouter)
 
 
 app.use((err, req, res, next) => {
+    console.log(err)
     const errCodes = ['23502', '22P02', '23503', '42703', '42702']
 
     if (errCodes.includes(err.code)) {
